@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomina - 分享</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #FFFAF0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 30%, rgba(173, 216, 230, 0.07) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(221, 160, 221, 0.05) 0%, transparent 50%);
+            height: 100vh;
+            overflow: hidden;
+        }
+        .constellation-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            z-index: 0;
+            background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+        }
+        .trigram {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        .share-card {
+            position: relative;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFFAF0 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 320px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .share-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        .share-card-content {
+            position: relative;
+            z-index: 1;
+        }
+        .share-name {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .share-pinyin {
+            font-size: 1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .share-zodiac {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .share-zodiac-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 8px;
+        }
+        .share-description {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .share-logo {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            margin-top: 20px;
+        }
+        .social-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .social-button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        .tiktok-button {
+            background-color: #000000;
+            color: white;
+        }
+        .instagram-button {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+        }
+        .twitter-button {
+            background-color: #1DA1F2;
+            color: white;
+        }
+        .share-caption {
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .share-caption-header {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .action-button {
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .primary-button {
+            background: linear-gradient(135deg, #F5D0A9 0%, #E6C3A5 100%);
+            color: #4A2511;
+            flex: 2;
+            margin-right: 10px;
+        }
+        .secondary-button {
+            background-color: #f5f5f5;
+            color: #666;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="constellation-bg"></div>
+    
+    <!-- 八卦"离"卦符号 -->
+    <div class="trigram" style="top: 10%; left: 10%;">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="10" fill="#333"/>
+            <rect x="20" y="45" width="60" height="10" fill="#333"/>
+            <rect x="20" y="70" width="25" height="10" fill="#333"/>
+            <rect x="55" y="70" width="25" height="10" fill="#333"/>
+        </svg>
+    </div>
+    <div class="trigram" style="bottom: 15%; right: 10%;">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="10" fill="#333"/>
+            <rect x="20" y="45" width="60" height="10" fill="#333"/>
+            <rect x="20" y="70" width="25" height="10" fill="#333"/>
+            <rect x="55" y="70" width="25" height="10" fill="#333"/>
+        </svg>
+    </div>
+    
+    <div class="relative z-10 h-full flex flex-col p-6">
+        <div class="text-center mb-6 mt-4">
+            <h1 class="text-2xl font-bold text-gray-800">分享你的专属中文名</h1>
+        </div>
+        
+        <div class="flex-1 flex flex-col">
+            <!-- 分享卡片预览 -->
+            <div class="share-card mb-6">
+                <div class="share-card-content">
+                    <div class="share-name">雨晴</div>
+                    <div class="share-pinyin">Yǔ Qíng</div>
+                    
+                    <div class="share-zodiac">
+                        <svg class="share-zodiac-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#E6C3A5"/>
+                        </svg>
+                        <span>狮子座匹配度 92%</span>
+                    </div>
+                    
+                    <div class="share-description">
+                        「雨晴」寓意着经历风雨后的晴朗，象征着乐观向上的生活态度。
+                    </div>
+                    
+                    <div class="share-logo">
+                        Nomina ✨
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分享文案 -->
+            <div class="share-caption">
+                <div class="share-caption-header">分享文案</div>
+                <p>🔥 这是我的AI中文名！叫雨晴 (Yǔ Qíng)，寓意经历风雨后的晴朗，与我的狮子座超级匹配！你也来试试？ #Nomina #AI起名 #中文名</p>
+            </div>
+            
+            <!-- 社交分享按钮 -->
+            <div class="social-buttons mt-6">
+                <button class="social-button tiktok-button">
+                    <i class="fab fa-tiktok mr-2"></i>TikTok
+                </button>
+                <button class="social-button instagram-button">
+                    <i class="fab fa-instagram mr-2"></i>Instagram
+                </button>
+                <button class="social-button twitter-button">
+                    <i class="fab fa-twitter mr-2"></i>Twitter
+                </button>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="action-buttons mt-6">
+                <button class="action-button primary-button">
+                    <i class="fas fa-download mr-2"></i>保存图片
+                </button>
+                <button class="action-button secondary-button">
+                    <i class="fas fa-arrow-left mr-2"></i>返回
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>            
