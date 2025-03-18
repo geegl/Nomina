@@ -2,14 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "/*/.*",  // 匹配所有路由
+      "src": "build/web/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/.*",
-      "dest": "/build/web/$1"  // 匹配Flutter web构建目录
+      "src": "/(.*)",
+      "dest": "/build/web/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/build/web/index.html"
     }
   ]
 }

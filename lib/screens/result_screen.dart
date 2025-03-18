@@ -13,6 +13,15 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
   late AnimationController _controller;
   late Animation<double> _fadeInAnimation;
   late Animation<double> _progressAnimation;
+  
+  // 存储生成的名字和相关信息
+  String chineseName = '';
+  String pinyin = '';
+  String zodiac = '';
+  int matchPercentage = 0;
+  String meaning = '';
+  String fiveElements = '';
+  String nameAnalysis = '';
 
   @override
   void initState() {
@@ -36,8 +45,37 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
       ),
     );
     
-    _controller.forward();
+    // 调用API生成名字
+    _generateName();
   }
+
+  Future<void> _generateName() async {
+    final navigator = Navigator.of(context);
+    final shareScreen = await navigator.push<Map<String, dynamic>>(
+      MaterialPageRoute(
+        builder: (context) => ShareScreen(
+          chineseName: '',
+          pinyin: '',
+          zodiac: zodiac.isEmpty ? '狮子座' : zodiac,  // 如果没有设置星座，使用默认值
+          matchPercentage: 0,
+          meaning: '',
+        ),
+      ),
+    );
+
+    if (shareScreen != null) {
+      setState(() {
+        chineseName = shareScreen['name'] ?? '';
+        pinyin = shareScreen['pinyin'] ?? '';
+        meaning = shareScreen['meaning'] ?? '';
+        fiveElements = shareScreen['five_elements'] ?? '';
+        nameAnalysis = '「$chineseName」$meaning';
+        _controller.forward();
+      });
+    }
+  }
+
+
 
   @override
   void dispose() {
@@ -121,14 +159,13 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                             child: Container(
                               width: double.infinity,
                               padding: const EdgeInsets.all(30),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.8),
-                                borderRadius: BorderRadius.circular(20),
+                              decoration: const BoxDecoration(
+                                color: Color(0xE6FFFFFF),  // 添加const和正确颜色值
+                                borderRadius: BorderRadius.all(Radius.circular(20)),  // 使用命名构造函数
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 30,
-                                    offset: const Offset(0, 10),
+                                    color: Color(0xB3000000),  // 正确颜色格式
+                                    blurRadius: 10,
                                   ),
                                 ],
                               ),
@@ -136,9 +173,9 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   // 中文名
-                                  const Text(
-                                    '雨晴',
-                                    style: TextStyle(
+                                  Text(
+                                    chineseName,
+                                    style: const TextStyle(
                                       fontSize: 48,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xFF333333),
@@ -148,9 +185,9 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                                   const SizedBox(height: 8),
                                   
                                   // 拼音
-                                  const Text(
-                                    'Yǔ Qíng',
-                                    style: TextStyle(
+                                  Text(
+                                    pinyin,
+                                    style: const TextStyle(
                                       fontSize: 18,
                                       color: Color(0xFF666666),
                                     ),
@@ -165,9 +202,9 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text(
-                                            '狮子座匹配度',
-                                            style: TextStyle(
+                                          Text(
+                                            '$zodiac匹配度',
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               color: Color(0xFF666666),
                                             ),
@@ -238,9 +275,9 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                                   const SizedBox(height: 24),
                                   
                                   // 名字解析
-                                  const Column(
+                                  Column(
                                     children: [
-                                      Text(
+                                      const Text(
                                         '名字解析',
                                         style: TextStyle(
                                           fontSize: 14,
@@ -248,11 +285,11 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                                           color: Color(0xFF333333),
                                         ),
                                       ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Text(
-                                        '「雨晴」寓意着经历风雨后的晴朗，象征着乐观向上的生活态度。与狮子座的热情奔放相契合，体现出坚强与优雅的气质。',
+                                        nameAnalysis,
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           color: Color(0xFF666666),
                                         ),
@@ -272,7 +309,13 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => const ShareScreen(),
+                                                builder: (context) => ShareScreen(
+                                                  chineseName: chineseName,
+                                                  pinyin: pinyin,
+                                                  zodiac: zodiac,
+                                                  matchPercentage: matchPercentage,
+                                                  meaning: nameAnalysis,
+                                                ),
                                               ),
                                             );
                                           },
@@ -293,6 +336,11 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                                         child: ElevatedButton.icon(
                                           onPressed: () {
                                             // 重新生成逻辑
+                                            setState(() {
+                                              // 在这里实现重新生成的逻辑
+                                              _controller.reset();
+                                              _controller.forward();
+                                            });
                                           },
                                           icon: const Icon(Icons.refresh),
                                           label: const Text('重新生成'),
